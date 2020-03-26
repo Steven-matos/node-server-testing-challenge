@@ -35,14 +35,18 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  Cars.add(req.body)
-    .then(car => {
-      res.status(201).json(car);
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({ message: "failed to add new car!", error: err });
-    });
+  if (!req.body.vin && !req.body.make && !req.body.model && !req.body.mileage) {
+    res.status(400).json({ message: "missing required information" });
+  } else {
+    Cars.add(req.body)
+      .then(car => {
+        res.status(201).json(car);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ message: "failed to add new car!", error: err });
+      });
+  }
 });
 
 router.delete("/:id", (req, res) => {
